@@ -12,7 +12,7 @@
     .app{width:min(720px,100%)}
     .top{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:14px}
     .brand{display:flex;align-items:center;gap:10px;font-weight:900;font-size:clamp(20px,4vw,28px);letter-spacing:-.5px}.brand .globe{font-size:1.3em}
-    .stats{display:flex;gap:8px}.pill{background:rgba(255,255,255,.8);border:1px solid rgba(27,74,119,.1);backdrop-filter:blur(8px);border-radius:999px;padding:8px 12px;font-weight:800;font-size:14px;box-shadow:0 6px 18px rgba(30,80,130,.08)}
+    .stats{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end}.pill{background:rgba(255,255,255,.8);border:1px solid rgba(27,74,119,.1);backdrop-filter:blur(8px);border-radius:999px;padding:8px 12px;font-weight:800;font-size:14px;box-shadow:0 6px 18px rgba(30,80,130,.08)}
     .card{background:rgba(255,255,255,.94);border:1px solid rgba(17,74,126,.08);border-radius:30px;box-shadow:var(--shadow);padding:clamp(20px,5vw,38px);text-align:center;overflow:hidden;position:relative}
     .progress{height:8px;background:#e9f0f6;border-radius:99px;overflow:hidden;margin-bottom:24px}.progress>div{height:100%;width:0;background:linear-gradient(90deg,#3b8ff0,#45c67b);border-radius:99px;transition:width .35s ease}
     .eyebrow{font-size:13px;text-transform:uppercase;letter-spacing:1.4px;font-weight:900;color:var(--blue);margin-bottom:8px}
@@ -25,14 +25,18 @@
     .start{padding:14px 26px;border:0;border-radius:18px;background:linear-gradient(135deg,#1d74da,#45b978);color:white;font-weight:900;font-size:18px;cursor:pointer;box-shadow:0 12px 28px rgba(40,116,185,.25)}
     .mini{font-size:12px;color:#8293a5;margin-top:15px}.hidden{display:none!important}
     .spark{position:absolute;font-size:22px;animation:pop .8s ease-out forwards;pointer-events:none}@keyframes pop{0%{transform:translate(0,20px) scale(.2);opacity:0}40%{opacity:1}100%{transform:translate(var(--x),-110px) rotate(var(--r));opacity:0}}
-    @media(max-width:520px){body{align-items:flex-start;padding:12px}.top{margin-top:4px}.stats{gap:5px}.pill{padding:7px 9px;font-size:12px}.card{border-radius:24px;padding:20px 16px}.flag-wrap,.state-icon{height:155px}.flag{max-height:145px}.answer{padding:14px;font-size:17px}.feedback{font-size:16px}.brand{font-size:20px}}
+    @media(max-width:520px){body{align-items:flex-start;padding:12px}.top{margin-top:4px;align-items:flex-start}.stats{gap:5px}.pill{padding:7px 9px;font-size:12px}.card{border-radius:24px;padding:20px 16px}.flag-wrap,.state-icon{height:155px}.flag{max-height:145px}.answer{padding:14px;font-size:17px}.feedback{font-size:16px}.brand{font-size:20px}}
   </style>
 </head>
 <body>
   <main class="app">
     <div class="top">
       <div class="brand"><span class="globe">🌎</span><span>World Explorer</span></div>
-      <div class="stats"><div class="pill">⭐ <span id="score">0</span></div><div class="pill">🔥 <span id="streak">0</span></div></div>
+      <div class="stats">
+        <div class="pill">✅ Correct: <span id="correctCount">0</span></div>
+        <div class="pill">❌ Wrong: <span id="wrongCount">0</span></div>
+        <div class="pill">🔥 <span id="streak">0</span></div>
+      </div>
     </div>
     <section class="card" id="card">
       <div class="progress"><div id="progress"></div></div>
@@ -64,7 +68,7 @@ const states=[
 ['Alabama','Montgomery'],['Alaska','Juneau'],['Arizona','Phoenix'],['Arkansas','Little Rock'],['California','Sacramento'],['Colorado','Denver'],['Connecticut','Hartford'],['Delaware','Dover'],['Florida','Tallahassee'],['Georgia','Atlanta'],['Hawaii','Honolulu'],['Idaho','Boise'],['Illinois','Springfield'],['Indiana','Indianapolis'],['Iowa','Des Moines'],['Kansas','Topeka'],['Kentucky','Frankfort'],['Louisiana','Baton Rouge'],['Maine','Augusta'],['Maryland','Annapolis'],['Massachusetts','Boston'],['Michigan','Lansing'],['Minnesota','Saint Paul'],['Mississippi','Jackson'],['Missouri','Jefferson City'],['Montana','Helena'],['Nebraska','Lincoln'],['Nevada','Carson City'],['New Hampshire','Concord'],['New Jersey','Trenton'],['New Mexico','Santa Fe'],['New York','Albany'],['North Carolina','Raleigh'],['North Dakota','Bismarck'],['Ohio','Columbus'],['Oklahoma','Oklahoma City'],['Oregon','Salem'],['Pennsylvania','Harrisburg'],['Rhode Island','Providence'],['South Carolina','Columbia'],['South Dakota','Pierre'],['Tennessee','Nashville'],['Texas','Austin'],['Utah','Salt Lake City'],['Vermont','Montpelier'],['Virginia','Richmond'],['Washington','Olympia'],['West Virginia','Charleston'],['Wisconsin','Madison'],['Wyoming','Cheyenne']
 ].map(([state,capital])=>({state,capital}));
 const $=id=>document.getElementById(id);
-let score=0,streak=0,round=0,current=null,phase='flag',answered=false,lastCountry=-1;
+let correctCount=0,wrongCount=0,streak=0,round=0,current=null,phase='flag',answered=false,lastCountry=-1;
 function shuffle(a){return [...a].sort(()=>Math.random()-.5)}
 function sampleWrong(items,correct,key){return shuffle(items.filter(x=>x[key]!==correct)).slice(0,2).map(x=>x[key])}
 function newCountry(){let i;do{i=Math.floor(Math.random()*countries.length)}while(i===lastCountry);lastCountry=i;current=countries[i];phase='flag';renderCountryFlag()}
@@ -72,7 +76,7 @@ function setAnswers(values,correct){answered=false;$('feedback').textContent='';
 function renderCountryFlag(){round++;$('progress').style.width=((round%10)||10)*10+'%';$('eyebrow').textContent='Flag challenge';$('question').textContent='Which country has this flag?';$('hint').textContent='Look carefully, then choose one answer.';$('flagWrap').classList.remove('hidden');$('stateIcon').classList.add('hidden');$('flag').src=`https://flagcdn.com/w320/${current.code}.png`;$('flag').alt=`Flag quiz image`;let vals=[current.country,...sampleWrong(countries,current.country,'country')];setAnswers(vals,current.country)}
 function renderCapital(){round++;$('progress').style.width=((round%10)||10)*10+'%';$('eyebrow').textContent='Capital challenge';$('question').textContent=`What is the capital of ${current.country}?`;$('hint').textContent='Same country — now test the capital!';$('flagWrap').classList.remove('hidden');$('stateIcon').classList.add('hidden');$('flag').src=`https://flagcdn.com/w320/${current.code}.png`;let vals=[current.capital,...sampleWrong(countries,current.capital,'capital')];setAnswers(vals,current.capital)}
 function renderState(){round++;let s=states[Math.floor(Math.random()*states.length)];current=s;phase='state';$('progress').style.width=((round%10)||10)*10+'%';$('eyebrow').textContent='🇺🇸 Surprise U.S. challenge';$('question').textContent=`What is the capital of ${s.state}?`;$('hint').textContent='No flag this time — it’s an American state capital.';$('flagWrap').classList.add('hidden');$('stateIcon').classList.remove('hidden');let vals=[s.capital,...sampleWrong(states,s.capital,'capital')];setAnswers(vals,s.capital)}
-function choose(btn,picked,correct){if(answered)return;answered=true;document.querySelectorAll('.answer').forEach(b=>{b.disabled=true;const txt=b.querySelector('span:last-child').textContent;if(txt===correct)b.classList.add('correct')});if(picked===correct){score+=10;streak++;btn.classList.add('correct');$('feedback').textContent=streak>=3?`✅ Correct! ${streak} in a row! 🔥`:'✅ Correct! Great job!';$('feedback').classList.add('ok');celebrate()}else{streak=0;btn.classList.add('wrong');$('feedback').textContent=`❌ Not quite. The answer is ${correct}.`;$('feedback').classList.add('no')}$('score').textContent=score;$('streak').textContent=streak;$('nextBtn').classList.add('show')}
+function choose(btn,picked,correct){if(answered)return;answered=true;document.querySelectorAll('.answer').forEach(b=>{b.disabled=true;const txt=b.querySelector('span:last-child').textContent;if(txt===correct)b.classList.add('correct')});if(picked===correct){correctCount++;streak++;btn.classList.add('correct');$('feedback').textContent=streak>=3?`✅ Correct! ${streak} in a row! 🔥`:'✅ Correct! Great job!';$('feedback').classList.add('ok');celebrate()}else{wrongCount++;streak=0;btn.classList.add('wrong');$('feedback').textContent=`❌ Not quite. The answer is ${correct}.`;$('feedback').classList.add('no')}$('correctCount').textContent=correctCount;$('wrongCount').textContent=wrongCount;$('streak').textContent=streak;$('nextBtn').classList.add('show')}
 function celebrate(){const icons=['⭐','✨','🎉','🌟'];for(let i=0;i<8;i++){const s=document.createElement('span');s.className='spark';s.textContent=icons[Math.floor(Math.random()*icons.length)];s.style.left=(18+Math.random()*64)+'%';s.style.bottom='80px';s.style.setProperty('--x',(Math.random()*160-80)+'px');s.style.setProperty('--r',(Math.random()*180-90)+'deg');$('card').appendChild(s);setTimeout(()=>s.remove(),900)}}
 $('nextBtn').onclick=()=>{if(phase==='flag'){phase='capital';renderCapital()}else if(phase==='capital'){Math.random()<.22?renderState():newCountry()}else{newCountry()}};
 $('startBtn').onclick=()=>{$('welcome').classList.add('hidden');$('game').classList.remove('hidden');newCountry()};
