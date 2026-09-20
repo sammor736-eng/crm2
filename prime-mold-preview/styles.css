@@ -29,3 +29,6 @@
 @media(max-width:680px){.video-grid{gap:34px}}
 
 .company-film{background:#f8f4e9}.film-layout{display:grid;grid-template-columns:.74fr 1.26fr;align-items:center;gap:6%}.film-layout h2{margin:12px 0 19px}.film-layout p{font-size:1.08rem}.film-layout .button{margin-top:9px}.animation-film{background:#e7f0ed}.animation-film .video{display:block;max-width:790px}@media(max-width:900px){.film-layout{grid-template-columns:1fr;gap:27px}}
+
+/* Seven service areas: feature Brooklyn without crowding the smaller screens. */
+.area-feature:first-child{grid-column:span 2;min-height:130px;background:#123e47;color:#fff;box-shadow:5px 5px 0 #e9bd4b}.area-feature:first-child span,.area-feature:first-child small{color:#f6d681}.area-feature:first-child strong{margin-top:5px}@media(max-width:380px){.area-feature:first-child{grid-column:span 1}}
