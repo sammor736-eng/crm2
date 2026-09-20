@@ -22,3 +22,8 @@
 /* Prime logo palette: yellow leads; blue and red are quiet supporting accents. */
 :root{--orange:#e9bd4b}
 .topline,.cta{background:#e9bd4b}.header{border-bottom-color:#e9bd4b}.hero .button,.nav .call,.page-hero .button,.cta .button{box-shadow:4px 4px 0 #173e5a}.hero .button{background:#e9bd4b}.nav .call,.page-hero .button{background:#e9bd4b}.hero h1:after,.section-head .eyebrow{border-color:#e9bd4b;background-color:transparent}.hero h1:after{background:#e9bd4b}.section-head .eyebrow{color:#79550c}.photo-tag{background:#f4ce69;box-shadow:6px 6px 0 #173e5a}.card:nth-child(2):before,.process-step:nth-child(2){border-color:#326383}.card:nth-child(2):before{background:#326383}.card:nth-child(3):before{background:#b34b45}.project-note:nth-child(2){border-color:#326383}.review-source:nth-child(2){box-shadow:6px 6px 0 #b34b45}.area-feature{box-shadow:5px 5px 0 #b28b2e}.areas .eyebrow{color:#4a400f}.footer{border-top-color:#e9bd4b}
+/* Give each customer video its own row and room to breathe. */
+.video-grid{grid-template-columns:1fr;max-width:790px;gap:48px}
+.video-grid>div{width:100%}
+.video-caption{margin-top:14px}
+@media(max-width:680px){.video-grid{gap:34px}}
