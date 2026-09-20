@@ -27,3 +27,5 @@
 .video-grid>div{width:100%}
 .video-caption{margin-top:14px}
 @media(max-width:680px){.video-grid{gap:34px}}
+
+.company-film{background:#f8f4e9}.film-layout{display:grid;grid-template-columns:.74fr 1.26fr;align-items:center;gap:6%}.film-layout h2{margin:12px 0 19px}.film-layout p{font-size:1.08rem}.film-layout .button{margin-top:9px}.animation-film{background:#e7f0ed}.animation-film .video{display:block;max-width:790px}@media(max-width:900px){.film-layout{grid-template-columns:1fr;gap:27px}}
