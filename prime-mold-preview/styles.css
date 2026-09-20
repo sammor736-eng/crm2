@@ -43,3 +43,5 @@
 
 .job-gallery{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px}.job-gallery figure{margin:0}.job-gallery img{display:block;width:100%;aspect-ratio:4/3;object-fit:cover;border-radius:16px}.job-gallery figcaption{font-size:14px;color:#42606a;padding:10px 2px}@media(max-width:700px){.job-gallery{grid-template-columns:1fr}}
 .job-video{display:block;max-width:520px;width:100%;aspect-ratio:9/16;max-height:620px;object-fit:contain;background:#092c31;border-radius:16px}
+
+.brand-mark{display:block;position:relative;width:275px;height:48px;overflow:hidden;flex:none}.brand-mark img{position:absolute;width:345px;height:auto;max-width:none;top:50%;left:50%;transform:translate(-50%,-50%)}@media(max-width:680px){.brand-mark{width:205px;height:40px}.brand-mark img{width:258px;height:auto}}
